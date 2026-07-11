@@ -80,20 +80,50 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Contact Form Logic (Direct Mailto)
+    // Contact Form Logic (Background Submit with Feedback)
     const contactForm = document.getElementById('contact-form');
+    const formStatus = document.getElementById('form-status');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            const name = document.getElementById('sender-name').value;
-            const email = document.getElementById('sender-email').value;
-            const message = document.getElementById('sender-message').value;
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page reload
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+
+            const formData = new FormData();
+            // IMPORTANT: Replace with your actual Web3Forms Access Key
+            formData.append('access_key', 'YOUR_ACCESS_KEY_HERE'); 
+            formData.append('name', document.getElementById('sender-name').value);
+            formData.append('email', document.getElementById('sender-email').value);
+            formData.append('message', document.getElementById('sender-message').value);
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    formStatus.textContent = 'Message sent successfully! 🚀';
+                    formStatus.style.color = '#00ff00';
+                    formStatus.style.display = 'block';
+                    contactForm.reset();
+                } else {
+                    formStatus.textContent = 'Failed! Please ensure you added the Access Key in script.js.';
+                    formStatus.style.color = '#ff4444';
+                    formStatus.style.display = 'block';
+                }
+            } catch (error) {
+                formStatus.textContent = 'An error occurred. Please check your connection.';
+                formStatus.style.color = '#ff4444';
+                formStatus.style.display = 'block';
+            }
+
+            submitBtn.textContent = 'Send Message';
+            submitBtn.disabled = false;
             
-            const subject = encodeURIComponent(`New Portfolio Message from ${name}`);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
-            
-            contactForm.action = `mailto:dpjaiswal.lkouniv@gmail.com?subject=${subject}&body=${body}`;
-            contactForm.method = 'POST';
-            contactForm.enctype = 'text/plain';
+            // Hide message after 5 seconds
+            setTimeout(() => { formStatus.style.display = 'none'; }, 5000);
         });
     }
 
