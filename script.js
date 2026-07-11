@@ -55,43 +55,4 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial transition setup for highlight
     highlightText.style.transition = 'opacity 0.3s ease';
 
-    // 3D Mouse Tracking / Parallax Effect for the Avatar (simulating the 'eyes following' effect)
-    const avatarContainer = document.querySelector('.avatar-container');
-    const heroSection = document.querySelector('.hero-section');
-
-    heroSection.addEventListener('mousemove', (e) => {
-        if (!avatarContainer) return;
-        
-        const rect = avatarContainer.getBoundingClientRect();
-        // Calculate center of the avatar container
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        // Calculate distance from center
-        const mouseX = e.clientX - centerX;
-        const mouseY = e.clientY - centerY;
-        
-        // Calculate rotation degrees (adjust the divisor for sensitivity)
-        const rotateX = (mouseY / (rect.height / 2)) * -15; // Max 15 degrees tilt
-        const rotateY = (mouseX / (rect.width / 2)) * 15;
-        
-        // Apply transform
-        avatarContainer.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
-    });
-
-    heroSection.addEventListener('mouseleave', () => {
-        if (!avatarContainer) return;
-        // Reset transform when mouse leaves
-        avatarContainer.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-    });
-    
-    // Add smooth transition for resetting the transform
-    avatarContainer.style.transition = 'transform 0.1s ease-out';
-    heroSection.addEventListener('mouseleave', () => {
-        avatarContainer.style.transition = 'transform 0.5s ease-out';
-    });
-    heroSection.addEventListener('mouseenter', () => {
-        avatarContainer.style.transition = 'transform 0.1s ease-out';
-    });
-
 });
