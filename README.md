@@ -9,22 +9,25 @@ This is a premium, dark-mode inspired personal portfolio designed to showcase my
 ---
 
 ## 🎨 Features
-- **Modern UI/UX:** A sleek dark theme with a purple/cyan neon ambient glow.
+- **Light & Dark Mode:** Integrated theme toggle with `localStorage` persistence to seamlessly switch between a sleek dark theme and a clean light theme.
+- **Dynamic Hero Section:** Morphing text effect highlighting different technical roles.
+- **Modern UI/UX:** Purple/cyan neon ambient glow with clean, scalable CSS architecture.
 - **Responsive Design:** Fully optimized for desktop, tablet, and mobile devices.
 - **Scroll Animations:** Smooth fade-in and slide-up effects as you scroll through the sections.
-- **Dynamic Hero Section:** Morphing text effect highlighting different technical roles.
+- **Functional Contact Form:** Background form submission via Web3Forms API, providing immediate UI feedback without relying on complex backend servers or native mail clients.
 - **Organized Sections:**
   - `About Me`: Summary of my journey as a GenAI Engineer.
-  - `My Tech Stack`: A dedicated, visually distinct grid for technical proficiencies (Python, RAG, LLMs, etc.).
+  - `My Tech Stack`: A dedicated, visually distinct grid with interactive pill badges.
   - `Experience`: An interactive vertical timeline for work history.
-  - `Projects`: Card-based layout for featured AI/ML and RAG systems.
+  - `Projects`: Card-based layout with integrated GitHub links for featured AI/ML systems.
   - `Education & Certifications`: Clean list for academic background.
 
 ## 🛠️ Technology Stack
 This project was built from scratch without heavy frameworks to ensure maximum performance and flexibility:
-- **HTML5:** Semantic structure and accessibility.
-- **CSS3 (Vanilla):** Custom design system, Flexbox/Grid layouts, CSS variables, and keyframe animations.
-- **JavaScript (Vanilla):** Scroll intersection observers and dynamic DOM manipulation.
+- **HTML5:** Semantic structure and built-in form validation.
+- **CSS3 (Vanilla):** Custom design system, Flexbox/Grid layouts, CSS variables for theme-switching, and keyframe animations.
+- **JavaScript (Vanilla):** Scroll intersection observers, dynamic DOM manipulation, theme persistence, and Fetch API for asynchronous requests.
+- **Web3Forms API:** Serverless email forwarding for the contact section.
 - **FontAwesome:** Scalable vector icons for social links.
 
 ## 🚀 How to Run Locally
@@ -35,7 +38,12 @@ This project was built from scratch without heavy frameworks to ensure maximum p
    cd it-s-me-dp
    ```
 
-2. **Serve the files:**
+2. **Configure Contact Form (Required for Emails):**
+   - Go to [Web3Forms](https://web3forms.com/) and generate a free access key for your email.
+   - Open `script.js` and locate the line: `formData.append('access_key', 'YOUR_ACCESS_KEY_HERE');`
+   - Replace `'YOUR_ACCESS_KEY_HERE'` with your actual key.
+
+3. **Serve the files:**
    Since this is a static website (HTML/CSS/JS), you can run it using any simple local server. For example, using Python:
    ```bash
    python -m http.server 8080
@@ -45,7 +53,7 @@ This project was built from scratch without heavy frameworks to ensure maximum p
    npx http-server -p 8080
    ```
 
-3. **Open in browser:**
+4. **Open in browser:**
    Navigate to `http://localhost:8080` to view the site.
 
 ## 📞 Connect with Me
