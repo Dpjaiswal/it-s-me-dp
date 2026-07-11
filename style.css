@@ -251,35 +251,67 @@ section {
     100% { transform: rotate(360deg); }
 }
 
-/* About Section */
+/* About & Tech Stack Sections */
 .about-content {
     display: flex;
-    gap: 4rem;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
 }
 
 .about-text {
-    flex: 1;
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-}
-
-.skills-grid {
-    flex: 1.5;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
-.skill-category h3 {
     font-size: 1.2rem;
-    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 800px;
+}
+
+/* Tech Stack Grid */
+.tech-stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.tech-category {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.tech-category:hover {
+    transform: translateY(-5px);
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+.tech-category h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
     color: var(--text-primary);
 }
 
-.skill-category p {
-    font-size: 0.9rem;
+.tech-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.tech-pill {
+    background: rgba(138, 43, 226, 0.1);
     color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    transition: all 0.3s ease;
+}
+
+.tech-pill:hover {
+    background: rgba(138, 43, 226, 0.3);
+    color: #fff;
+    border-color: var(--accent-color);
 }
 
 /* Experience Timeline */
