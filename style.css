@@ -502,7 +502,7 @@ section {
     color: var(--accent-color);
 }
 
-/* Footer */
+/* Footer & Contact Form */
 footer {
     padding: 6rem 2rem 2rem;
     text-align: center;
@@ -515,9 +515,57 @@ footer {
     margin-bottom: 1rem;
 }
 
-.footer-content p {
-    color: var(--text-secondary);
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: left;
+}
+
+.form-group {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+}
+
+.submit-btn {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 1rem 2rem;
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
     font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.submit-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 0 20px var(--glow-color);
 }
 
 .footer-bottom {

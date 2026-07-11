@@ -234,8 +234,27 @@
     <footer id="contact">
         <div class="footer-content">
             <h2>Let's Connect</h2>
-            <p>+919161185629 | dpjaiswal.lkouniv@gmail.com</p>
-            <p>Mumbai, India</p>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">Ready to collaborate on AI and scalable backend systems? Drop me a message!</p>
+            
+            <!-- Contact Form -->
+            <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+                <!-- IMPORTANT: Replace YOUR_ACCESS_KEY_HERE with your Web3Forms access key -->
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                </div>
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+
+            <div class="contact-details" style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; color: var(--text-secondary);">
+                <p><i class="fas fa-phone" style="color: var(--accent-color);"></i> +919161185629</p>
+                <p><i class="fas fa-envelope" style="color: var(--accent-color);"></i> dpjaiswal.lkouniv@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt" style="color: var(--accent-color);"></i> Mumbai, India</p>
+            </div>
         </div>
         <div class="footer-bottom">
             <p>© 2026 Durga Prasad Jaiswal. All rights reserved.</p>
