@@ -237,16 +237,13 @@
             <h2>Let's Connect</h2>
             <p style="margin-bottom: 2rem; color: var(--text-secondary);">Ready to collaborate on AI and scalable backend systems? Drop me a message!</p>
             
-            <!-- Contact Form -->
-            <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
-                <!-- IMPORTANT: Replace YOUR_ACCESS_KEY_HERE with your Web3Forms access key -->
-                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
-                
+            <!-- Contact Form (Direct Mailto Logic) -->
+            <form id="contact-form" class="contact-form">
                 <div class="form-group">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
+                    <input type="text" id="sender-name" placeholder="Your Name" required>
+                    <input type="email" id="sender-email" placeholder="Your Email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Please enter a valid email address">
                 </div>
-                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <textarea id="sender-message" rows="5" placeholder="Your Message" required></textarea>
                 
                 <button type="submit" class="submit-btn">Send Message</button>
             </form>
