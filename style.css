@@ -9,6 +9,46 @@
     --font-body: 'Inter', sans-serif;
 }
 
+[data-theme="light"] {
+    --bg-color: #f5f5f7;
+    --text-primary: #1d1d1f;
+    --text-secondary: #666666;
+    --accent-color: #6a0dad;
+    --glow-color: rgba(106, 13, 173, 0.2);
+}
+
+[data-theme="light"] .tech-category,
+[data-theme="light"] .project-card,
+[data-theme="light"] .contact-form input,
+[data-theme="light"] .contact-form textarea {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .tech-category:hover,
+[data-theme="light"] .project-card:hover {
+    border-color: rgba(106, 13, 173, 0.4) !important;
+    background: #ffffff !important;
+}
+
+[data-theme="light"] .navbar {
+    background: rgba(245, 245, 247, 0.8) !important;
+}
+
+[data-theme="light"] .timeline-center .year {
+    background: var(--bg-color) !important;
+}
+
+[data-theme="light"] .tech-pill {
+    background: rgba(106, 13, 173, 0.1) !important;
+    border-color: rgba(106, 13, 173, 0.2) !important;
+    color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .tech-pill:hover {
+    background: rgba(106, 13, 173, 0.2) !important;
+}
+
 * {
     margin: 0;
     padding: 0;
