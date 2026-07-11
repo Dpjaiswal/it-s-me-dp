@@ -562,6 +562,8 @@ footer {
     flex-direction: column;
     gap: 1.5rem;
     text-align: left;
+    position: relative;
+    z-index: 10;
 }
 
 .form-group {

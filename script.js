@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
             const name = document.getElementById('sender-name').value;
             const email = document.getElementById('sender-email').value;
             const message = document.getElementById('sender-message').value;
@@ -92,7 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const subject = encodeURIComponent(`New Portfolio Message from ${name}`);
             const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
             
-            window.location.href = `mailto:dpjaiswal.lkouniv@gmail.com?subject=${subject}&body=${body}`;
+            contactForm.action = `mailto:dpjaiswal.lkouniv@gmail.com?subject=${subject}&body=${body}`;
+            contactForm.method = 'POST';
+            contactForm.enctype = 'text/plain';
         });
     }
 
