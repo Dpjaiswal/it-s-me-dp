@@ -12,9 +12,11 @@ This is a premium, dark-mode inspired personal portfolio designed to showcase my
 - **Light & Dark Mode:** Integrated theme toggle with `localStorage` persistence to seamlessly switch between a sleek dark theme and a clean light theme.
 - **Dynamic Hero Section:** Morphing text effect highlighting different technical roles.
 - **Modern UI/UX:** Purple/cyan neon ambient glow with clean, scalable CSS architecture.
-- **Responsive Design:** Fully optimized for desktop, tablet, and mobile devices.
+- **Responsive Design:** Fully optimized for desktop, tablet, and mobile devices, featuring a custom **Mobile Hamburger Navigation**.
+- **SEO & Accessibility (a11y):** Integrated Open Graph (OG) tags for social sharing and aria-labels for screen readers.
+- **Resume Integration:** A dedicated button to seamlessly download the latest CV/Resume.
 - **Scroll Animations:** Smooth fade-in and slide-up effects as you scroll through the sections.
-- **Functional Contact Form:** Background form submission via Web3Forms API, providing immediate UI feedback without relying on complex backend servers or native mail clients.
+- **Functional Contact Form:** Background form submission via Web3Forms API, with real-time **CSS validation feedback** (red/green glowing borders), providing immediate UI feedback without relying on complex backend servers or native mail clients.
 - **Organized Sections:**
   - `About Me`: Summary of my journey as a GenAI Engineer.
   - `My Tech Stack`: A dedicated, visually distinct grid with interactive pill badges.
