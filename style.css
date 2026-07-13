@@ -57,6 +57,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
 }
 
 body {
@@ -140,6 +141,10 @@ a:hover {
     z-index: 100;
     background: rgba(5, 5, 5, 0.8);
     backdrop-filter: blur(10px);
+}
+
+.menu-toggle {
+    display: none; /* hidden on desktop */
 }
 
 .logo {
@@ -231,6 +236,25 @@ section {
     font-size: 4rem;
     line-height: 1.1;
     text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.resume-btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.resume-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 0 20px var(--glow-color);
 }
 
 .hero-right {
@@ -591,6 +615,16 @@ footer {
     box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
 }
 
+.contact-form input:not(:placeholder-shown):invalid,
+.contact-form textarea:not(:placeholder-shown):invalid {
+    border-color: #ff4444;
+}
+
+.contact-form input:not(:placeholder-shown):valid,
+.contact-form textarea:not(:placeholder-shown):valid {
+    border-color: #00C851;
+}
+
 .submit-btn {
     background: transparent;
     color: var(--text-primary);
@@ -664,10 +698,47 @@ footer {
         text-align: center;
     }
     .navbar {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1rem 2rem;
     }
+    
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 101;
+    }
+    
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(5, 5, 5, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        gap: 1.5rem;
+        transform: translateY(-150%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 100;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+    }
+
+    [data-theme="light"] .nav-links {
+        background: rgba(245, 245, 247, 0.95);
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
     .nav-contact {
         display: none;
     }

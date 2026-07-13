@@ -1,6 +1,24 @@
 // Simple intersection observer for scroll animations
 document.addEventListener("DOMContentLoaded", () => {
     
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu');
+    const navLinksContainer = document.getElementById('nav-links');
+    
+    if (mobileMenuBtn && navLinksContainer) {
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('active');
+        });
+
+        // Close menu when clicking a link
+        const navLinks = navLinksContainer.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navLinksContainer.classList.remove('active');
+            });
+        });
+    }
+
     // Animate elements on scroll
     const observerOptions = {
         root: null,
