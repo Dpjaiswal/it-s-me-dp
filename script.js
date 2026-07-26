@@ -265,8 +265,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (termOutput && runTriage && runFinance && runLegal) {
         let isRunning = false;
-
-        async function writeLine(text, type = '', delay = 20) {
         let cursorSpan = null;
 
         function showCursor() {
