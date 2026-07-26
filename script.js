@@ -363,32 +363,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
         runTriage.addEventListener('click', () => {
             const steps = [
-                { text: `${getTimestamp()} INFO: Loading clinical triage workflow with LangGraph...`, type: 'info', delay: 450 },
-                { text: `${getTimestamp()} INFO: Parsing input 'patient_report.jpg' using MediaPipe OCR...`, type: 'info', delay: 700 },
-                { text: `${getTimestamp()} SUCCESS: Extracted key points. Bounding boxes parsed: [OK]`, type: 'success', delay: 400 },
-                { text: `${getTimestamp()} INFO: Generating 1024-dimensional query embeddings (nomic-embed-text)...`, type: 'info', delay: 650 },
-                { text: `${getTimestamp()} INFO: Querying Qdrant index 'clinical_symptoms' (similarity threshold: 0.8)...`, type: 'info', delay: 800 },
-                { text: `${getTimestamp()} SUCCESS: Found 3 candidate symptom matches in database.`, type: 'success', delay: 500 },
-                { text: `${getTimestamp()} INFO: Routing matches to BAAI/bge-reranker-base for precision reranking...`, type: 'info', delay: 750 },
-                { text: `${getTimestamp()} SUCCESS: Top match: 'Myocardial Infarction / Angina Triage' (Score: 0.942)`, type: 'success', delay: 450 },
-                { text: `${getTimestamp()} WARNING: Critical severity score computed (1.0). Triggering emergency route...`, type: 'warning', delay: 900 },
-                { text: `<strong>[DECISION]</strong> Emergency Cardiology consult recommended. Priority: Critical.<br>Triage alert dispatched to duty team.<br><strong>Latency:</strong> 145ms | <strong>Confidence:</strong> 94.2%`, type: 'result', delay: 100 }
+                { text: `${getTimestamp()} INFO: Loading clinical triage workflow with LangGraph...`, type: 'info', delay: 400 },
+                { text: `${getTimestamp()} INFO: Ingesting patient_report.jpg via MediaPipe Vision OCR...`, type: 'info', delay: 500 },
+                { text: `${getTimestamp()} GUARD: Running PII leak scan (check patient name/SSN)... [OK]`, type: 'success', delay: 450 },
+                { text: `${getTimestamp()} INFO: Generating 1024-dim embeddings (nomic-embed-text-v1.5)...`, type: 'info', delay: 500 },
+                { text: `${getTimestamp()} INFO: Executing Qdrant search (similarity threshold: 0.80)...`, type: 'info', delay: 600 },
+                { text: `${getTimestamp()} SUCCESS: Retrieved 3 matched diagnostic candidates from Qdrant vector store.`, type: 'success', delay: 400 },
+                { text: `${getTimestamp()} INFO: Reranking candidates via BAAI/bge-reranker-base...`, type: 'info', delay: 550 },
+                { text: `${getTimestamp()} GUARD: Running Grounding Guard (token overlap overlap_score=0.96)... [OK]`, type: 'success', delay: 500 },
+                { text: `${getTimestamp()} GUARD: Verification Check: Confidence score (0.94) exceeds threshold (0.80). [PASS]`, type: 'success', delay: 500 },
+                { text: `${getTimestamp()} FALLBACK: Intent check: High priority clinical symptom matched. Enforcing cardiological triage route...`, type: 'warning', delay: 700 },
+                { text: `<strong>[DECISION]</strong> Emergency Cardiology consult recommended. Priority: Critical.<br>Triage alert dispatched to duty team.<br><strong>Latency:</strong> 145ms | <strong>Groundedness:</strong> 96.0% (PASS) | <strong>Safety Guard:</strong> CLEAR`, type: 'result', delay: 100 }
             ];
             runPipeline('python clinical_triage.py --query "chest pain, history of hypertension"', steps);
         });
 
         runFinance.addEventListener('click', () => {
             const steps = [
-                { text: `${getTimestamp()} INFO: Starting stateful financial analysis pipeline...`, type: 'info', delay: 500 },
-                { text: `${getTimestamp()} INFO: Ingesting document 'AMZN_2025_10K.pdf' via PyPDFLoader...`, type: 'info', delay: 800 },
-                { text: `${getTimestamp()} SUCCESS: Tokenized and parsed 42 document chunks. [OK]`, type: 'success', delay: 400 },
-                { text: `${getTimestamp()} INFO: Executing hybrid retriever: Qdrant (dense) + BM25 (sparse)...`, type: 'info', delay: 700 },
-                { text: `${getTimestamp()} INFO: Running Reciprocal Rank Fusion (RRF, k=60) on result sets...`, type: 'info', delay: 650 },
-                { text: `${getTimestamp()} SUCCESS: Merged and retrieved top 10 relevant document pages.`, type: 'success', delay: 450 },
-                { text: `${getTimestamp()} INFO: Reranking candidates via BAAI/bge-reranker-large...`, type: 'info', delay: 600 },
-                { text: `${getTimestamp()} INFO: Checking quantitative outputs in Math Grounding Verification Layer...`, type: 'info', delay: 750 },
-                { text: `${getTimestamp()} SUCCESS: Grounding verified. Output matches source figures on pages 47-50. [OK]`, type: 'success', delay: 500 },
-                { text: `<strong>[RESPONSE]</strong> Net profit margin for FY2025 increased by 4.2% YoY, primarily driven by AWS operational efficiencies.<br><strong>Math Grounding check:</strong> PASS (100% match) | <strong>Latency:</strong> 210ms`, type: 'result', delay: 100 }
+                { text: `${getTimestamp()} INFO: Starting stateful financial analysis pipeline...`, type: 'info', delay: 400 },
+                { text: `${getTimestamp()} INFO: Loading AMZN_2025_10K.pdf. Ingestion chunk size: 512 tokens...`, type: 'info', delay: 600 },
+                { text: `${getTimestamp()} INFO: Triggering hybrid retriever (Qdrant Dense + BM25 Sparse)...`, type: 'info', delay: 550 },
+                { text: `${getTimestamp()} INFO: Running Reciprocal Rank Fusion (RRF, k=60) on result sets...`, type: 'info', delay: 500 },
+                { text: `${getTimestamp()} SUCCESS: Matched top 10 relevant document sections.`, type: 'success', delay: 400 },
+                { text: `${getTimestamp()} INFO: Reranking document matches via BAAI/bge-reranker-large...`, type: 'info', delay: 600 },
+                { text: `${getTimestamp()} GUARD: Executing Groundedness Guard (Factual consistency check via token overlap)...`, type: 'info', delay: 650 },
+                { text: `${getTimestamp()} GUARD: Running Math Grounding Verification Layer: checking calculations...`, type: 'info', delay: 700 },
+                { text: `${getTimestamp()} SUCCESS: Grounding Guard: 100% PASS (0% hallucination detected in generated numbers).`, type: 'success', delay: 500 },
+                { text: `${getTimestamp()} FALLBACK: Grounding score (1.0) is above fallback threshold (0.95). No fallback active.`, type: 'success', delay: 400 },
+                { text: `<strong>[RESPONSE]</strong> Net profit margin for FY2025 increased by 4.2% YoY, primarily driven by AWS operational efficiencies.<br><strong>Math Grounding:</strong> 100% MATCH | <strong>Hallucination Check:</strong> 0% (PASS) | <strong>Latency:</strong> 210ms`, type: 'result', delay: 100 }
             ];
             runPipeline('python finance_rag.py --query "Q3 profit margin AWS contribution"', steps);
         });
@@ -396,12 +398,15 @@ document.addEventListener("DOMContentLoaded", () => {
         runLegal.addEventListener('click', () => {
             const steps = [
                 { text: `${getTimestamp()} INFO: Launching Legal AI Assistant question-answering session...`, type: 'info', delay: 450 },
-                { text: `${getTimestamp()} INFO: Initializing Llama-3.1-8b-instant model on Groq API... [OK]`, type: 'success', delay: 600 },
-                { text: `${getTimestamp()} INFO: Indexing input query 'contract termination notice period'...`, type: 'info', delay: 550 },
-                { text: `${getTimestamp()} INFO: Retrieving relevant clauses from Qdrant contract namespace...`, type: 'info', delay: 800 },
-                { text: `${getTimestamp()} INFO: Running NLP coherence filter (minimum similarity threshold: 0.78)...`, type: 'info', delay: 650 },
-                { text: `${getTimestamp()} SUCCESS: Identified 1 active clause, filtered out 3 weak matches.`, type: 'success', delay: 500 },
-                { text: `<strong>[CLAUSE MATCH]</strong> Section 12.3 (Termination for Convenience): Either party may terminate this agreement upon 30 days prior written notice.<br><strong>Model:</strong> Llama-3.1-8b-instant (via Groq) | <strong>Latency:</strong> 85ms`, type: 'result', delay: 100 }
+                { text: `${getTimestamp()} INFO: Initializing Llama-3.1-8b-instant model on Groq API... [OK]`, type: 'success', delay: 500 },
+                { text: `${getTimestamp()} INFO: Embedding query: 'contract termination notice period'...`, type: 'info', delay: 450 },
+                { text: `${getTimestamp()} INFO: Fetching contract clauses from Qdrant Vector database...`, type: 'info', delay: 650 },
+                { text: `${getTimestamp()} INFO: Running NLP coherence filter (minimum similarity threshold: 0.78)...`, type: 'info', delay: 550 },
+                { text: `${getTimestamp()} SUCCESS: Matched 1 active clause, filtered out 3 weak matches.`, type: 'success', delay: 400 },
+                { text: `${getTimestamp()} GUARD: Running strict hallucination check against reference contract text...`, type: 'info', delay: 600 },
+                { text: `${getTimestamp()} SUCCESS: Groundedness Guard: 100% factual consistency score. [OK]`, type: 'success', delay: 450 },
+                { text: `${getTimestamp()} FALLBACK: Intent parsed as 'Termination Inquiry'. Activating Fallback Parser: Regex matcher enabled to prevent JSON parser crash... [OK]`, type: 'warning', delay: 700 },
+                { text: `<strong>[CLAUSE MATCH]</strong> Section 12.3 (Termination for Convenience): Either party may terminate this agreement upon 30 days prior written notice.<br><strong>Groundedness:</strong> 100% (PASS) | <strong>Fallback:</strong> Regex Enabled (PASS) | <strong>Latency:</strong> 85ms`, type: 'result', delay: 100 }
             ];
             runPipeline('python legal_assistant.py --query "termination notice terms"', steps);
         });
