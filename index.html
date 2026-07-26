@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <canvas id="neural-net-canvas"></canvas>
 
     <!-- Fixed Header -->
     <header class="navbar">
@@ -58,8 +59,31 @@
             </div>
 
             <div class="hero-right">
-                <p>A Dedicated</p>
-                <h2><span class="highlight">GenAI</span><br>ENGINEER</h2>
+                <!-- Interactive AI/ML Agent Console -->
+                <div class="terminal-widget">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <span class="t-btn close"></span>
+                            <span class="t-btn minimize"></span>
+                            <span class="t-btn maximize"></span>
+                        </div>
+                        <div class="terminal-title">dpjaiswal_agent_v1.0.sh</div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="terminal-output" id="terminal-output">
+                            <p class="t-line"><span class="t-prompt">></span> dpjaiswal.init_agent()</p>
+                            <p class="t-line">[STATUS] Loading dense-sparse retriever... <span class="t-success">[OK]</span></p>
+                            <p class="t-line">[STATUS] Indexing vector db (Qdrant)... <span class="t-success">[OK]</span></p>
+                            <p class="t-line">[STATUS] LangGraph orchestration online... <span class="t-success">[OK]</span></p>
+                            <p class="t-line highlight-text">Ready. Select a workflow to execute inference:</p>
+                        </div>
+                        <div class="terminal-controls">
+                            <button class="console-btn" id="run-triage">Clinical Triage</button>
+                            <button class="console-btn" id="run-finance">Finance RAG</button>
+                            <button class="console-btn" id="run-legal">Legal AI</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
