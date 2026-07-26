@@ -62,11 +62,21 @@ html {
 
 body {
     background-color: var(--bg-color);
+    background-image: 
+        linear-gradient(rgba(138, 43, 226, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(138, 43, 226, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
     color: var(--text-primary);
     font-family: var(--font-body);
     line-height: 1.6;
     overflow-x: hidden;
     position: relative;
+}
+
+[data-theme="light"] body {
+    background-image: 
+        linear-gradient(rgba(106, 13, 173, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(106, 13, 173, 0.015) 1px, transparent 1px);
 }
 
 /* Background Glow Effects */
@@ -766,7 +776,7 @@ footer {
 
 /* AI/ML Custom Styling additions */
 #neural-net-canvas {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
