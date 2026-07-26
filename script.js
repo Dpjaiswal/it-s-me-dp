@@ -267,25 +267,82 @@ document.addEventListener("DOMContentLoaded", () => {
         let isRunning = false;
 
         async function writeLine(text, type = '', delay = 20) {
+        let cursorSpan = null;
+
+        function showCursor() {
+            if (cursorSpan) cursorSpan.remove();
+            cursorSpan = document.createElement('span');
+            cursorSpan.className = 't-cursor';
+            termOutput.appendChild(cursorSpan);
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
+
+        function hideCursor() {
+            if (cursorSpan) {
+                cursorSpan.remove();
+                cursorSpan = null;
+            }
+        }
+
+        function getTimestamp() {
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            return `[${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}.${String(now.getMilliseconds()).padStart(3, '0')}]`;
+        }
+
+        async function writeLine(text, type = '', delay = 20) {
+            hideCursor();
             const line = document.createElement('p');
             line.className = 't-line';
             if (type === 'prompt') {
                 line.innerHTML = `<span class="t-prompt">></span> ${text}`;
             } else if (type === 'success') {
-                line.innerHTML = text.replace('[OK]', '<span class="t-success">[OK]</span>');
+                line.innerHTML = text.replace('[OK]', '<span class="t-success">[OK]</span>').replace('SUCCESS:', '<span class="t-success">SUCCESS:</span>');
             } else if (type === 'info') {
                 line.innerHTML = `<span class="t-info">${text}</span>`;
             } else if (type === 'warning') {
                 line.innerHTML = `<span class="t-warning">${text}</span>`;
+            } else if (type === 'result') {
+                line.className = 't-line t-result';
+                line.innerHTML = text;
             } else {
                 line.textContent = text;
             }
             termOutput.appendChild(line);
             termOutput.scrollTop = termOutput.scrollHeight;
+            showCursor();
+            
             await new Promise(resolve => setTimeout(resolve, delay));
         }
 
-        async function runPipeline(pipelineName, steps) {
+        async function typeCommand(commandStr) {
+            hideCursor();
+            const line = document.createElement('p');
+            line.className = 't-line';
+            line.innerHTML = `<span class="t-prompt">></span> <span class="t-cmd"></span>`;
+            termOutput.appendChild(line);
+            const cmdSpan = line.querySelector('.t-cmd');
+            
+            for (let i = 0; i < commandStr.length; i++) {
+                cmdSpan.textContent += commandStr[i];
+                termOutput.scrollTop = termOutput.scrollHeight;
+                showCursor();
+                await new Promise(resolve => setTimeout(resolve, 40));
+            }
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+
+        // Initialize with default state
+        termOutput.innerHTML = '';
+        (async () => {
+            await writeLine('dpjaiswal.init_agent()', 'prompt', 100);
+            await writeLine(`${getTimestamp()} INFO: Loading dense-sparse retrievers...`, 'info', 150);
+            await writeLine(`${getTimestamp()} INFO: Connecting Qdrant Vector DB (1024-dim)... [OK]`, 'success', 200);
+            await writeLine(`${getTimestamp()} INFO: LangGraph state router active... [OK]`, 'success', 150);
+            await writeLine(`${getTimestamp()} SUCCESS: Agent online. Select a workflow to execute:`, 'success', 50);
+        })();
+
+        async function runPipeline(command, steps) {
             if (isRunning) return;
             isRunning = true;
             termOutput.innerHTML = '';
@@ -294,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
             runFinance.disabled = true;
             runLegal.disabled = true;
 
-            await writeLine(`python run_${pipelineName}.py`, 'prompt', 150);
+            await typeCommand(command);
             
             for (const step of steps) {
                 await writeLine(step.text, step.type, step.delay || 400);
@@ -308,38 +365,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
         runTriage.addEventListener('click', () => {
             const steps = [
-                { text: '[INIT] Extracting symptoms via MediaPipe Vision OCR API...', type: 'info' },
-                { text: '[PROCCESS] Parsing image data to JSON schemas... [OK]', type: 'success' },
-                { text: '[RAG] Embedding clinical symptoms (1024-dim)... [OK]', type: 'success' },
-                { text: '[VECTOR] Semantic search in Qdrant database... [OK]', type: 'success' },
-                { text: '[RERANK] Applying BGE-Reranker (Top-K query)... [OK]', type: 'success' },
-                { text: '[STATUS] Constrained state-machine routing to Cardiology Agent...', type: 'warning' },
-                { text: '[RESULT] Successfully Routed. Severity: High. Latency: 145ms.', type: 'info' }
+                { text: `${getTimestamp()} INFO: Loading clinical triage workflow with LangGraph...`, type: 'info', delay: 450 },
+                { text: `${getTimestamp()} INFO: Parsing input 'patient_report.jpg' using MediaPipe OCR...`, type: 'info', delay: 700 },
+                { text: `${getTimestamp()} SUCCESS: Extracted key points. Bounding boxes parsed: [OK]`, type: 'success', delay: 400 },
+                { text: `${getTimestamp()} INFO: Generating 1024-dimensional query embeddings (nomic-embed-text)...`, type: 'info', delay: 650 },
+                { text: `${getTimestamp()} INFO: Querying Qdrant index 'clinical_symptoms' (similarity threshold: 0.8)...`, type: 'info', delay: 800 },
+                { text: `${getTimestamp()} SUCCESS: Found 3 candidate symptom matches in database.`, type: 'success', delay: 500 },
+                { text: `${getTimestamp()} INFO: Routing matches to BAAI/bge-reranker-base for precision reranking...`, type: 'info', delay: 750 },
+                { text: `${getTimestamp()} SUCCESS: Top match: 'Myocardial Infarction / Angina Triage' (Score: 0.942)`, type: 'success', delay: 450 },
+                { text: `${getTimestamp()} WARNING: Critical severity score computed (1.0). Triggering emergency route...`, type: 'warning', delay: 900 },
+                { text: `<strong>[DECISION]</strong> Emergency Cardiology consult recommended. Priority: Critical.<br>Triage alert dispatched to duty team.<br><strong>Latency:</strong> 145ms | <strong>Confidence:</strong> 94.2%`, type: 'result', delay: 100 }
             ];
-            runPipeline('clinical_triage', steps);
+            runPipeline('python clinical_triage.py --query "chest pain, history of hypertension"', steps);
         });
 
         runFinance.addEventListener('click', () => {
             const steps = [
-                { text: '[INIT] Parsing SEC 10-K report via PyPDFLoader...', type: 'info' },
-                { text: '[RAG] Dense-Sparse hybrid retrieval query active...', type: 'info' },
-                { text: '[VECTOR] Matching index from Qdrant + BM25 scores...', type: 'success' },
-                { text: '[STATUS] Running Reciprocal Rank Fusion (RRF)... [OK]', type: 'success' },
-                { text: '[GUARD] Evaluating Math Grounding Layer... (100% verified)', type: 'success' },
-                { text: '[RESULT] Profit margins up 4.2% YoY. No hallucinations. Latency: 210ms.', type: 'info' }
+                { text: `${getTimestamp()} INFO: Starting stateful financial analysis pipeline...`, type: 'info', delay: 500 },
+                { text: `${getTimestamp()} INFO: Ingesting document 'AMZN_2025_10K.pdf' via PyPDFLoader...`, type: 'info', delay: 800 },
+                { text: `${getTimestamp()} SUCCESS: Tokenized and parsed 42 document chunks. [OK]`, type: 'success', delay: 400 },
+                { text: `${getTimestamp()} INFO: Executing hybrid retriever: Qdrant (dense) + BM25 (sparse)...`, type: 'info', delay: 700 },
+                { text: `${getTimestamp()} INFO: Running Reciprocal Rank Fusion (RRF, k=60) on result sets...`, type: 'info', delay: 650 },
+                { text: `${getTimestamp()} SUCCESS: Merged and retrieved top 10 relevant document pages.`, type: 'success', delay: 450 },
+                { text: `${getTimestamp()} INFO: Reranking candidates via BAAI/bge-reranker-large...`, type: 'info', delay: 600 },
+                { text: `${getTimestamp()} INFO: Checking quantitative outputs in Math Grounding Verification Layer...`, type: 'info', delay: 750 },
+                { text: `${getTimestamp()} SUCCESS: Grounding verified. Output matches source figures on pages 47-50. [OK]`, type: 'success', delay: 500 },
+                { text: `<strong>[RESPONSE]</strong> Net profit margin for FY2025 increased by 4.2% YoY, primarily driven by AWS operational efficiencies.<br><strong>Math Grounding check:</strong> PASS (100% match) | <strong>Latency:</strong> 210ms`, type: 'result', delay: 100 }
             ];
-            runPipeline('financial_rag', steps);
+            runPipeline('python finance_rag.py --query "Q3 profit margin AWS contribution"', steps);
         });
 
         runLegal.addEventListener('click', () => {
             const steps = [
-                { text: '[INIT] Creating LangGraph legal intent parser...', type: 'info' },
-                { text: '[PROCCESS] Initializing Groq API Llama-3.1 model... [OK]', type: 'success' },
-                { text: '[VECTOR] Retrieving local legal clauses from Qdrant... [OK]', type: 'success' },
-                { text: '[GUARD] Coherence filtering applied (removed 3 irrelevant docs)... [OK]', type: 'success' },
-                { text: '[RESULT] Clause 12.3: 30 days written notice. Latency: 85ms.', type: 'info' }
+                { text: `${getTimestamp()} INFO: Launching Legal AI Assistant question-answering session...`, type: 'info', delay: 450 },
+                { text: `${getTimestamp()} INFO: Initializing Llama-3.1-8b-instant model on Groq API... [OK]`, type: 'success', delay: 600 },
+                { text: `${getTimestamp()} INFO: Indexing input query 'contract termination notice period'...`, type: 'info', delay: 550 },
+                { text: `${getTimestamp()} INFO: Retrieving relevant clauses from Qdrant contract namespace...`, type: 'info', delay: 800 },
+                { text: `${getTimestamp()} INFO: Running NLP coherence filter (minimum similarity threshold: 0.78)...`, type: 'info', delay: 650 },
+                { text: `${getTimestamp()} SUCCESS: Identified 1 active clause, filtered out 3 weak matches.`, type: 'success', delay: 500 },
+                { text: `<strong>[CLAUSE MATCH]</strong> Section 12.3 (Termination for Convenience): Either party may terminate this agreement upon 30 days prior written notice.<br><strong>Model:</strong> Llama-3.1-8b-instant (via Groq) | <strong>Latency:</strong> 85ms`, type: 'result', delay: 100 }
             ];
-            runPipeline('legal_assistant', steps);
+            runPipeline('python legal_assistant.py --query "termination notice terms"', steps);
         });
     }
 
